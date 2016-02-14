@@ -5,6 +5,10 @@
 	var CH = canvas.height;
 	var fontSize = 32;
 	ctx.font = fontSize + "px monospace";
+	var cursor = new Cursor(CW / 2 - 100, CH / 2 - (fontSize / 2 + 8));
+
+	window.addEventListener("keydown", press, false);
+	window.addEventListener("keyup", release, false);
 
 	var menu = ["Start", "Options", "Quit"];
 
@@ -25,14 +29,15 @@
 		menu.forEach(function(option, i) {
 			ctx.fillText(option, CW / 2, CH / 2 + fontSize * 1.5 * i);
 		});
- 
+
 		// Path2D
+		cursor.update();
 		ctx.strokeStyle = "#FFF";
 		ctx.lineWidth = 4;
 		ctx.lineCap = "square";
 		ctx.stroke(roundedCorners(
-					CW / 2 - 100,
-					CH / 2 - (fontSize / 2 + 8),
+					cursor.x,
+					cursor.y + (fontSize + 16) * cursor.i,
 					200, fontSize + 16, 10));
 	}
 	window.requestAnimationFrame(main);

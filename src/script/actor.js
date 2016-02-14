@@ -1,6 +1,6 @@
-function Actor() {
-	this.x = 0;
-	this.y = 0;
+function Actor(x, y) {
+	this.x = x || 0;
+	this.y = y || 0;
 }
 
 Actor.prototype.moveUp = function() {
@@ -17,4 +17,23 @@ Actor.prototype.moveLeft = function() {
 
 Actor.prototype.moveRight = function() {
 	this.x += 1;
+}
+
+function Cursor(x, y) {
+	this.x = x;
+	this.y = y;
+	this.i = 0;
+}
+
+Cursor.prototype.moveUp = function() {
+	this.i -= 1;
+}
+
+Cursor.prototype.moveDown= function() {
+	this.i += 1;
+}
+
+Cursor.prototype.update = function() {
+	if (input.up) { this.moveUp(); }
+	if (input.down) { this.down(); }
 }

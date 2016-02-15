@@ -29,11 +29,11 @@ Cursor.prototype.moveUp = function() {
 	this.i -= 1;
 }
 
-Cursor.prototype.moveDown= function() {
+Cursor.prototype.moveDown = function() {
 	this.i += 1;
 }
 
 Cursor.prototype.update = function() {
-	if (input.up) { this.moveUp(); }
+	if (input.up && this.i > 0) { this.moveUp(); }
 	if (input.down) { this.down(); }
 }

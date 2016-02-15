@@ -10,7 +10,28 @@
 	window.addEventListener("keydown", press, false);
 	window.addEventListener("keyup", release, false);
 
-	var menu = ["Start", "Options", "Quit"];
+    function Cursor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.i = 0;
+        this.path2D = roundedCorners(this.x, this.y, w)
+    }
+
+    function Menu(xC, yC, fields, fontSize) {
+        // xC + yC define center of first menu item
+        this.fields = fields;
+        this.itMax = fields.length;
+        this.maxWidth = fields.reduce(function(pre, cur) {
+            return pre.length > cur.length ? pre : cur;
+        });
+
+        // Cursor
+        this.w = maxWidth + fontSize * 2;
+        this.h = fontSize * 1.5;
+        this.x = xC - this.w / 2;
+        this.y = yC - this.h / 2;
+        this.cursor = roundedCorners(this.x, this.y, this.w, this.h, 10);
+    }
 
 	function main(tStamp) {
 		window.requestAnimationFrame(main);
@@ -37,7 +58,7 @@
 		ctx.lineCap = "square";
 		ctx.stroke(roundedCorners(
 					cursor.x,
-					cursor.y + (fontSize + 16) * cursor.i,
+					(cursor.y + ((fontSize + 16) * cursor.i)),
 					200, fontSize + 16, 10));
 	}
 	window.requestAnimationFrame(main);

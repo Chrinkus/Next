@@ -7,7 +7,9 @@
 	//window.addEventListener("keydown", press, false);
 	//window.addEventListener("keyup", release, false);
 
-    var startMenu = new Menu(CW / 2, CH / 2, ["Start", "Options", "Quit"], 32);
+    //var startMenu = new Menu(CW / 2, CH / 2, ["Start", "Options", "Quit"], 32);
+    var smallMenu = new Menu(CW / 2, 100,
+            ["Lightning", "Mater", "Fillmore", "Sarge", "Red"], 32);
 
 	function main(tStamp) {
 		window.requestAnimationFrame(main);
@@ -19,7 +21,7 @@
 		ctx.fillRect(0, 0, CW, CH);
 
         // Menu
-        startMenu.draw(ctx);
+        smallMenu.draw(ctx);
 
 	}
 	window.requestAnimationFrame(main);

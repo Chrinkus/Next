@@ -14,13 +14,14 @@ function Menu(xC, yC, fields, fontSize) {
     }).length;
 
     // Cursor
-    this.w = this.maxWidth * fontSize;
+    this.w = this.maxWidth * fontSize * 0.8;
     this.h = fontSize * 1.5;
     this.x = xC - this.w / 2;
     this.y = yC - this.h / 2;
+    this.r = 10;
     this.i = 0;
     this.cursor = roundedCorners(this.x, this.y + (this.h * this.i),
-                                 this.w, this.h, 10);
+                                 this.w, this.h, this.r);
 }
 
 Menu.prototype.draw = function(ctx) {
@@ -36,7 +37,7 @@ Menu.prototype.draw = function(ctx) {
     });
     // Cursor
     ctx.strokeStyle = this.strokeStyle;
-    ctx.lineWidth = 4;      // Make a dynamic width that accesses fontSize
+    ctx.lineWidth = Math.floor(this.fontSize / 7);
     ctx.lineCap = "square";
     ctx.stroke(this.cursor);
 

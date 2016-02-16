@@ -19,21 +19,3 @@ Actor.prototype.moveRight = function() {
 	this.x += 1;
 }
 
-function Cursor(x, y) {
-	this.x = x;
-	this.y = y;
-	this.i = 0;
-}
-
-Cursor.prototype.moveUp = function() {
-	this.i -= 1;
-}
-
-Cursor.prototype.moveDown = function() {
-	this.i += 1;
-}
-
-Cursor.prototype.update = function() {
-	if (input.up && this.i > 0) { this.moveUp(); }
-	if (input.down) { this.down(); }
-}

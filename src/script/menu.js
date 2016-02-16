@@ -20,8 +20,7 @@ function Menu(xC, yC, fields, fontSize) {
     this.y = yC - this.h / 2;
     this.r = 10;
     this.i = 0;
-    this.cursor = roundedCorners(this.x, this.y + (this.h * this.i),
-                                 this.w, this.h, this.r);
+    this.delay = 0;
 }
 
 Menu.prototype.draw = function(ctx) {
@@ -39,7 +38,23 @@ Menu.prototype.draw = function(ctx) {
     ctx.strokeStyle = this.strokeStyle;
     ctx.lineWidth = Math.floor(this.fontSize / 7);
     ctx.lineCap = "square";
+    this.cursor = roundedCorners(this.x, this.y + (this.h * this.i),
+                                 this.w, this.h, this.r);
     ctx.stroke(this.cursor);
 
     ctx.restore();
+}
+
+Menu.prototype.update = function(delta, keysDown) {
+    this.delay += delta;
+    if (this.delay > 250) {
+        if (87 in keysDown && this.i > 0) {
+            this.i -= 1;
+            this.delay = 0;
+        }
+        if (83 in keysDown && this.i < this.itMax) {
+            this.i += 1;
+            this.delay = 0;
+        }
+    }
 }

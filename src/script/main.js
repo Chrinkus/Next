@@ -3,16 +3,27 @@
 	var ctx = canvas.getContext("2d");
 	var CW = canvas.width;
 	var CH = canvas.height;
+    
+    // Input processing
+    var keysDown = {};
+    var then = 0;
 
-	//window.addEventListener("keydown", press, false);
-	//window.addEventListener("keyup", release, false);
+    addEventListener("keydown", function(e) {
+        keysDown[e.keyCode] = true;
+    }, false);
 
-    //var startMenu = new Menu(CW / 2, CH / 2, ["Start", "Options", "Quit"], 32);
-    var smallMenu = new Menu(CW / 2, 100,
-            ["Lightning", "Mater", "Fillmore", "Sarge", "Red"], 32);
+    addEventListener("keyup", function(e) {
+        delete keysDown[e.keyCode];
+    }, false);
+
+    // Test content
+    var fields = ["Start", "Multiplayer", "Store", "Options", "Quit"];
+    var startMenu = new Menu(CW / 2, CH / 2, fields, 32);
 
 	function main(tStamp) {
 		window.requestAnimationFrame(main);
+        var now = Math.floor(tStamp);
+        var delta = now - then;
 
 		ctx.clearRect(0, 0, CW, CH);
 
@@ -21,8 +32,10 @@
 		ctx.fillRect(0, 0, CW, CH);
 
         // Menu
-        smallMenu.draw(ctx);
+        startMenu.update(delta, keysDown);
+        startMenu.draw(ctx);
 
+        then = now;
 	}
 	window.requestAnimationFrame(main);
 })();

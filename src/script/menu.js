@@ -1,4 +1,5 @@
 function Menu(xC, yC, fields, fontSize) {
+    "use strict";
     // xC + yC define center of first menu item
     this.xC = xC;
     this.yC = yC;
@@ -55,6 +56,9 @@ Menu.prototype.update = function(delta, keysDown) {
         if (83 in keysDown && this.i < this.itMax) {
             this.i += 1;
             this.delay = 0;
+        }
+        if (13 in keysDown) {
+            this.selections(this.fields[this.i]);
         }
     }
 }

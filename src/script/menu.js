@@ -49,15 +49,15 @@ Menu.prototype.draw = function(ctx) {
 Menu.prototype.update = function(delta, keysDown) {
     this.delay += delta;
     if (this.delay > 250) {
-        if (87 in keysDown && this.i > 0) {
+        if (KEY.W in keysDown && this.i > 0) {
             this.i -= 1;
             this.delay = 0;
         }
-        if (83 in keysDown && this.i < this.itMax) {
+        if (KEY.S in keysDown && this.i < this.itMax) {
             this.i += 1;
             this.delay = 0;
         }
-        if (13 in keysDown) {
+        if (KEY.ENTER in keysDown) {
             this.selections(this.fields[this.i]);
         }
     }

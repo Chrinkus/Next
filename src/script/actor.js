@@ -2,6 +2,7 @@ function Actor(x, y) {
     "use strict";
 	this.x = x || 0;
 	this.y = y || 0;
+    this.pause = false;
 }
 /*
 Actor.prototype.moveUp = function() {
@@ -25,6 +26,7 @@ Actor.prototype.update = function(delta, keysDown) {
     if (KEY.S in keysDown) { this.y += 1; }
     if (KEY.A in keysDown) { this.x -= 1; }
     if (KEY.D in keysDown) { this.x += 1; }
+    if (KEY.ESC in keysDown) { this.pause = true; }
 }
 
 Actor.prototype.draw = function(ctx) {

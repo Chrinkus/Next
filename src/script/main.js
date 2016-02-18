@@ -1,9 +1,9 @@
 (function() {
     "use strict";
-	var canvas = document.getElementById("viewport");
-	var ctx = canvas.getContext("2d");
-	var CW = canvas.width;
-	var CH = canvas.height;
+    var canvas = document.getElementById("viewport");
+    var ctx = canvas.getContext("2d");
+    var CW = canvas.width;
+    var CH = canvas.height;
     var stopStart, stopMain;
     
     // Input processing
@@ -33,26 +33,27 @@
                 break;
             case "Quit":
                 // do for quit
+                break;
         }
     }
 
-	function start(tStamp) {
-		stopStart = window.requestAnimationFrame(start);
+    function start(tStamp) {
+        stopStart = window.requestAnimationFrame(start);
         var now = Math.floor(tStamp);
         var delta = now - then;
 
-		ctx.clearRect(0, 0, CW, CH);
+        ctx.clearRect(0, 0, CW, CH);
 
-		// Background
-		ctx.fillStyle = "#000";
-		ctx.fillRect(0, 0, CW, CH);
+        // Background
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, CW, CH);
 
         // Menu
         startMenu.update(delta, keysDown);
         startMenu.draw(ctx);
 
         then = now;
-	}
+    }
     stopStart = window.requestAnimationFrame(start);
 
     function main(tStamp) {

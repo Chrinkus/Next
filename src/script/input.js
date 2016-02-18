@@ -7,7 +7,8 @@ const KEY = {
     LEFT: 37,
     DOWN: 40,
     RIGHT: 39,
-    ESC: 27
+    ESC: 27,
+    ENTER: 13
 };
 
 var input = {

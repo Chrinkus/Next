@@ -1,15 +1,15 @@
 (function() {
     "use strict";
-	var canvas = document.getElementById("viewport");
-	var ctx = canvas.getContext("2d");
-	var CW = canvas.width;
-	var CH = canvas.height;
-    var stopStart, stopMain, player;
-    
-    // Input processing
-    var keysDown = {};
-    var then = 0;
+    var canvas = document.getElementById("viewport"),
+        ctx = canvas.getContext("2d"),
+        CW = canvas.width,
+        CH = canvas.height,
+        then = 0,
+        stopStart, stopMain, player,
+        startMenu, startFields,
+        pauseMenu, pauseFields;
 
+    // Input processing
     addEventListener("keydown", function(e) {
         keysDown[e.keyCode] = true;
     }, false);
@@ -18,32 +18,22 @@
         delete keysDown[e.keyCode];
     }, false);
 
-    // Test content
     // Start menu
-    var startFields = ["Start", "Options", "Quit"];
-    var startMenu = new Menu(CW / 2, CH / 2, startFields, 32);
-    startMenu.selections = function(field) {
+    startFields = ["Start", "Options", "Exit"];
+    startMenu = new Menu(CW / 2, CH / 2, startFields, 32);
+
+    // Pause menu
+    pauseFields = ["Resume", "Options", "Quit"];
+    pauseMenu = new Menu(CW / 2, CH / 2, pauseFields, 32);
+
+    Menu.prototype.selections = function(field) {
         switch (field) {
             case "Start":
-                player = new Actor(CW / 2, CH / 2);
+                player = new Player(CW / 2, CH / 2);
                 player.pause = false;
                 window.cancelAnimationFrame(stopStart);
                 stopMain = window.requestAnimationFrame(main);
                 break;
-            case "Options":
-                // do for options
-                break;
-            case "Quit":
-                // do for quit
-                break;
-        }
-    }
-
-    // Pause menu
-    var pauseFields = ["Resume", "Options", "Quit"];
-    var pauseMenu = new Menu(CW / 2, CH / 2, pauseFields, 32);
-    pauseMenu.selections = function(field) {
-        switch (field) {
             case "Resume":
                 player.pause = false;
                 break;
@@ -57,6 +47,9 @@
                 startMenu.i = 0;
                 window.cancelAnimationFrame(stopMain);
                 stopStart = window.requestAnimationFrame(start);
+                break;
+            case "Exit":
+                // do for exit
                 break;
         }
     }

@@ -8,7 +8,9 @@ const KEY = {
     DOWN: 40,
     RIGHT: 39,
     ESC: 27,
-    ENTER: 13
+    ENTER: 13,
+    SPACE: 32,
+    SHIFT: 16
 };
 
 var keysDown = {};

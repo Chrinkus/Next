@@ -2,6 +2,7 @@ function Actor(x, y) {
     "use strict";
     this.x = x || 0;
     this.y = y || 0;
+    this.speed = 128;
     this.pause = false;
 }
 
@@ -21,10 +22,23 @@ Player.prototype = Object.create(Actor.prototype);
 
 Player.prototype.update = function(delta, keysDown) {
     this.anima = this.idle;
-    if (KEY.W in keysDown) { this.anima = this.up; this.y -= 1; }
-    if (KEY.S in keysDown) { this.anima = this.down; this.y += 1; }
-    if (KEY.A in keysDown) { this.anima = this.left; this.x -= 1; }
-    if (KEY.D in keysDown) { this.anima = this.right; this.x += 1; }
+    this.speed = KEY.SHIFT in keysDown ? 256 : 128;
+    if (KEY.W in keysDown) {
+        this.anima = this.up;
+        this.y -= delta * this.speed;
+    }
+    if (KEY.S in keysDown) {
+        this.anima = this.down;
+        this.y += delta * this.speed;
+    }
+    if (KEY.A in keysDown) {
+        this.anima = this.left;
+        this.x -= delta * this.speed;
+    }
+    if (KEY.D in keysDown) {
+        this.anima = this.right;
+        this.x += delta * this.speed;
+    }
     if (KEY.ESC in keysDown) { this.pause = true; }
 }
 

@@ -92,7 +92,7 @@
             pauseMenu.update(delta, keysDown);
             pauseMenu.draw(ctx);
         } else {
-            player.update(delta, keysDown);
+            player.update(delta / 1000, keysDown);
             player.draw(ctx);
         }
 

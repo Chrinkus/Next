@@ -1,7 +1,7 @@
 function Actor(x, y) {
     "use strict";
-	this.x = x || 0;
-	this.y = y || 0;
+    this.x = x || 0;
+    this.y = y || 0;
     this.pause = false;
 }
 

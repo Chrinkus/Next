@@ -6,7 +6,6 @@ function Actor(x, y) {
 
 function Projectile(x, y, facing) {
     "use strict";
-    var that = this;
     this.px = x + 32;               // half of player frame width
     this.py = y + 32;               // half of player frame height
     this.snapFace = facing;
@@ -18,23 +17,26 @@ function Projectile(x, y, facing) {
 
 Projectile.prototype = Object.create(Actor.prototype);
 
-Projectile.prototype.orient = function(ctx) {
-    ctx.save();
+Projectile.prototype.update = function(delta) {
     switch (this.snapFace) {
-        case "right":
-            // no rotate
-            break;
-        case "down":
-            ctx.rotate(Math.PI / 2);
-            break;
-        case "left":
-            ctx.rotate(Math.PI);
-            break;
-        case "up":
-            ctx.rotate(Math.PI * 1.5);
-            break;
+        case "up":      this.py -= this.speed * delta; break;
+        case "down":    this.py += this.speed * delta; break;
+        case "left":    this.px -= this.speed * delta; break;
+        case "right":   this.px += this.speed * delta; break;
     }
-    this.fire.draw(ctx, this.px, this.py);
+}
+
+Projectile.prototype.draw = function(ctx) {
+    ctx.save();
+    ctx.translate(this.px + this.sheet.frameWidth / 2,
+                  this.py + this.sheet.frameHeight / 2);
+    switch (this.snapFace) {
+        case "down": ctx.rotate(Math.PI / 2);   break;
+        case "left": ctx.rotate(Math.PI);       break;
+        case "up":   ctx.rotate(Math.PI * 1.5); break;
+    }
+    this.fire.draw(ctx, -this.sheet.frameWidth / 2,
+                        -this.sheet.frameHeight / 2);
     ctx.restore();
 }
 
@@ -85,13 +87,19 @@ Player.prototype.update = function(delta, keysDown) {
     if (KEY.ESC in keysDown) { this.pause = true; }
 
     // Projectiles
-    if (this.delay > 100 && KEY.SPACE in keysDown && this.projectiles.length < 3) {
+    if (KEY.SPACE in keysDown) {
         this.projectiles.unshift(new Projectile(this.x, this.y, this.facing));
+        console.log("FIRE!!");
     }
+
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
-            proj.px += delta * proj.speed;
-            if (proj.px > 1000) { arr.slice(i); }
+            proj.update(delta);
+
+            if (proj.px > 1000 || proj.px < 0 ||
+                proj.py > 600 || proj.py < 0) {
+                    arr.splice(i, i + 1);
+                }
         });
     }
 }
@@ -109,7 +117,7 @@ Player.prototype.draw = function(ctx) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj) {
-            proj.orient(ctx);
+            proj.draw(ctx);
         });
     }
 }

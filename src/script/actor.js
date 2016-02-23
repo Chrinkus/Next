@@ -11,7 +11,7 @@ function Projectile(x, y, facing) {
     this.snapFace = facing;
     this.speed = 512;
 
-    this.sheet = new SpriteSheet("/src/images/Red_Projectile.png", 64, 16);
+    this.sheet = new SpriteSheet("/src/images/Red_Projectile.png", 16, 16);
     this.fire = new Animation(this.sheet, 8, 0, 1);
 }
 

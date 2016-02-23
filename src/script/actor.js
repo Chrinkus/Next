@@ -46,29 +46,29 @@ function Player(x, y) {
 
 Player.prototype = Object.create(Actor.prototype);
 
-Player.prototype.update = function(delta, keysDown) {
+Player.prototype.update = function(deltaS, keysDown) {
     // Character
-    this.delay += delta;
+    this.delay += deltaS;
     this.speed = KEY.SHIFT in keysDown ? 256 : 128;
     if (KEY.W in keysDown) {
         this.anima = this.up;
         this.facing = "up";
-        this.y -= delta * this.speed;
+        this.y -= deltaS * this.speed;
     }
     if (KEY.S in keysDown) {
         this.anima = this.down;
         this.facing = "down";
-        this.y += delta * this.speed;
+        this.y += deltaS * this.speed;
     }
     if (KEY.A in keysDown) {
         this.anima = this.left;
         this.facing = "left";
-        this.x -= delta * this.speed;
+        this.x -= deltaS * this.speed;
     }
     if (KEY.D in keysDown) {
         this.anima = this.right;
         this.facing = "right";
-        this.x += delta * this.speed;
+        this.x += deltaS * this.speed;
     }
     if (KEY.ESC in keysDown) { this.pause = true; }
 
@@ -80,12 +80,12 @@ Player.prototype.update = function(delta, keysDown) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
-            proj.update(delta);
+            proj.update(deltaS);
 
             if (proj.px > 1000 || proj.px < 0 ||
-                proj.py > 600 || proj.py < 0) {
-                    arr.splice(i, i + 1);
-                }
+                    proj.py > 600 || proj.py < 0) {
+                arr.splice(i, i + 1);
+            }
         });
     }
 }

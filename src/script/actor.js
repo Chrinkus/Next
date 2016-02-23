@@ -6,13 +6,13 @@ function Actor(x, y) {
 
 function Projectile(x, y, facing) {
     "use strict";
-    this.px = x + 32;               // half of player frame width
+    this.px = x + 24;               // half of player frame width (not really?)
     this.py = y + 32;               // half of player frame height
     this.snapFace = facing;
     this.speed = 512;
 
     this.sheet = new SpriteSheet("/src/images/Red_Projectile.png", 16, 16);
-    this.fire = new Animation(this.sheet, 8, 0, 1);
+    this.fire = new Animation(this.sheet, 15, 0, 1);
 }
 
 Projectile.prototype = Object.create(Actor.prototype);
@@ -24,20 +24,6 @@ Projectile.prototype.update = function(delta) {
         case "left":    this.px -= this.speed * delta; break;
         case "right":   this.px += this.speed * delta; break;
     }
-}
-
-Projectile.prototype.draw = function(ctx) {
-    ctx.save();
-    ctx.translate(this.px + this.sheet.frameWidth / 2,
-                  this.py + this.sheet.frameHeight / 2);
-    switch (this.snapFace) {
-        case "down": ctx.rotate(Math.PI / 2);   break;
-        case "left": ctx.rotate(Math.PI);       break;
-        case "up":   ctx.rotate(Math.PI * 1.5); break;
-    }
-    this.fire.draw(ctx, -this.sheet.frameWidth / 2,
-                        -this.sheet.frameHeight / 2);
-    ctx.restore();
 }
 
 function Player(x, y) {
@@ -87,9 +73,9 @@ Player.prototype.update = function(delta, keysDown) {
     if (KEY.ESC in keysDown) { this.pause = true; }
 
     // Projectiles
-    if (KEY.SPACE in keysDown) {
+    if (this.delay > 0.15 && KEY.SPACE in keysDown && this.projectiles.length < 3) {
         this.projectiles.unshift(new Projectile(this.x, this.y, this.facing));
-        console.log("FIRE!!");
+        this.delay = 0;
     }
 
     if (this.projectiles.length) {
@@ -117,7 +103,8 @@ Player.prototype.draw = function(ctx) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj) {
-            proj.draw(ctx);
+            proj.fire.update();
+            proj.fire.draw(ctx, proj.px, proj.py);
         });
     }
 }

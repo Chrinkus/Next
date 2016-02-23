@@ -49,7 +49,7 @@ function Animation(spritesheet, frameSpeed, startFrame, endFrame) {
                 spritesheet.frameWidth,         // source width
                 spritesheet.frameHeight,        // source height
                 x, y,                           // destination x, y
-                spritesheet.frameWidth,         // destination width
-                spritesheet.frameHeight);       // destination height
+                spritesheet.frameWidth,     // destination width
+                spritesheet.frameHeight);   // destination height
     };
 }

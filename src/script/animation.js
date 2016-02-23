@@ -13,7 +13,7 @@ function SpriteSheet(path, frameWidth, frameHeight) {
     this.image.src = path;
 }
 
-function Animation(spritesheet, frameSpeed, startFrame, endFrame) {
+function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip) {
     "use strict";
     var animationSequence = []; // array holding the order of the animation
     var currentFrame = 0;       // the current frame to draw
@@ -41,6 +41,10 @@ function Animation(spritesheet, frameSpeed, startFrame, endFrame) {
         // get the row and col of the frame
         var row = Math.floor(animationSequence[currentFrame] / spritesheet.framesPerRow);
         var col = Math.floor(animationSequence[currentFrame] % spritesheet.framesPerRow);
+        var newX = flip ? -x - spritesheet.frameWidth : x;
+
+        ctx.save();
+        if (flip) { ctx.scale(-1, 1); }
 
         ctx.drawImage(
                 spritesheet.image,              // image
@@ -48,8 +52,10 @@ function Animation(spritesheet, frameSpeed, startFrame, endFrame) {
                 row * spritesheet.frameHeight,  // source y
                 spritesheet.frameWidth,         // source width
                 spritesheet.frameHeight,        // source height
-                x, y,                           // destination x, y
+                newX, y,                           // destination x, y
                 spritesheet.frameWidth,     // destination width
                 spritesheet.frameHeight);   // destination height
+
+        ctx.restore();
     };
 }

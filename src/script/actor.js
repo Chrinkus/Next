@@ -36,11 +36,11 @@ function Player(x, y) {
     this.delay = 0;
 
     this.sheet = new SpriteSheet("/src/images/Red_Cube.png", 64, 64);
-    this.idle = new Animation(this.sheet, 15, 0, 1);
-    this.down = new Animation(this.sheet, 15, 2, 3);
-    this.up = new Animation(this.sheet, 15, 4, 5);
-    this.left = new Animation(this.sheet, 15, 6, 7);
-    this.right = new Animation(this.sheet, 15, 6, 7); // flip @ draw
+    this.idle = new Animation(this.sheet, 15, 0, 1, false);
+    this.down = new Animation(this.sheet, 15, 2, 3, false);
+    this.up = new Animation(this.sheet, 15, 4, 5, false);
+    this.left = new Animation(this.sheet, 15, 6, 7, false);
+    this.right = new Animation(this.sheet, 15, 6, 7, true);
     this.anima = this.idle;
 }
 
@@ -92,13 +92,10 @@ Player.prototype.update = function(delta, keysDown) {
 
 Player.prototype.draw = function(ctx) {
     ctx.save();
+
     this.anima.update();
-    if (this.anima === this.right) {
-        ctx.scale(-1, 1);
-        this.anima.draw(ctx, -this.x - this.sheet.frameWidth, this.y);
-    } else {
-        this.anima.draw(ctx, this.x, this.y);
-    }
+    this.anima.draw(ctx, this.x, this.y);
+
     ctx.restore();
 
     if (this.projectiles.length) {

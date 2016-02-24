@@ -5,7 +5,7 @@
         CW = canvas.width,
         CH = canvas.height,
         then = 0,
-        stopStart, stopMain, player,
+        stopStart, stopMain, player, barrel,
         startMenu, startFields,
         pauseMenu, pauseFields;
 
@@ -29,7 +29,8 @@
     Menu.prototype.selections = function(field) {
         switch (field) {
             case "Start":
-                player = new Player(CW / 2, CH / 2);
+                player = new Player(CW / 2, CH / 2, 64, 64);
+                barrel = new Obstacle(100, 100, 64, 64, "/src/images/Barrel.png");
                 player.pause = false;
                 window.cancelAnimationFrame(stopStart);
                 stopMain = window.requestAnimationFrame(main);
@@ -86,14 +87,16 @@
 
         if (player.pause) {
             player.draw(ctx);
+            barrel.draw(ctx);
             // Transparent backdrop
             ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
             ctx.fillRect(0, 0, CW, CH);
             pauseMenu.update(delta, keysDown);
             pauseMenu.draw(ctx);
         } else {
-            player.update(delta / 1000, keysDown);
+            player.update(delta / 1000, keysDown, barrel);
             player.draw(ctx);
+            barrel.draw(ctx);
         }
 
         then = now;

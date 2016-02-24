@@ -1,17 +1,35 @@
-function Actor(x, y) {
+function Actor(x, y, w, h) {
     "use strict";
     this.x = x || 0;
     this.y = y || 0;
+    this.width = w;
+    this.height = h;
 }
 
-function Projectile(x, y, facing) {
+function Obstacle(x, y, w, h, imgSrc) {
+    "use strict";
+    Actor.call(this, x, y, w, h);
+    this.img = new Image();
+    this.img.src = imgSrc;
+}
+
+Obstacle.prototype = Object.create(Actor.prototype);
+
+Obstacle.prototype.draw = function(ctx) {
+    ctx.drawImage(this.img, this.x, this.y);
+}
+
+function Projectile(x, y, w, h, facing) {
     "use strict";
     this.px = x + 24;               // half of player frame width (not really?)
     this.py = y + 32;               // half of player frame height
+    this.width = w;
+    this.height = h;
     this.snapFace = facing;
     this.speed = 512;
 
-    this.sheet = new SpriteSheet("/src/images/Red_Projectile.png", 16, 16);
+    this.sheet = new SpriteSheet("/src/images/Red_Projectile.png",
+            this.width, this.height);
     this.fire = new Animation(this.sheet, 15, 0, 1);
 }
 
@@ -26,16 +44,17 @@ Projectile.prototype.update = function(delta) {
     }
 }
 
-function Player(x, y) {
+function Player(x, y, w, h) {
     "use strict";
-    Actor.call(this, x, y);
+    Actor.call(this, x, y, w, h);
     this.speed = 128;
     this.pause = false;
     this.facing = "left";           // Default facing
     this.projectiles = [];
     this.delay = 0;
 
-    this.sheet = new SpriteSheet("/src/images/Red_Cube.png", 64, 64);
+    this.sheet = new SpriteSheet("/src/images/Red_Cube.png",
+            this.width, this.height);
     this.idle = new Animation(this.sheet, 15, 0, 1, false);
     this.down = new Animation(this.sheet, 15, 2, 3, false);
     this.up = new Animation(this.sheet, 15, 4, 5, false);
@@ -46,26 +65,26 @@ function Player(x, y) {
 
 Player.prototype = Object.create(Actor.prototype);
 
-Player.prototype.update = function(deltaS, keysDown) {
+Player.prototype.update = function(deltaS, keysDown, entity) {
     // Character
     this.delay += deltaS;
     this.speed = KEY.SHIFT in keysDown ? 256 : 128;
-    if (KEY.W in keysDown) {
+    if (KEY.W in keysDown && !(collision(this, entity, "up"))) {
         this.anima = this.up;
         this.facing = "up";
         this.y -= deltaS * this.speed;
     }
-    if (KEY.S in keysDown) {
+    if (KEY.S in keysDown && !(collision(this, entity, "down"))) {
         this.anima = this.down;
         this.facing = "down";
         this.y += deltaS * this.speed;
     }
-    if (KEY.A in keysDown) {
+    if (KEY.A in keysDown && !(collision(this, entity, "left"))) {
         this.anima = this.left;
         this.facing = "left";
         this.x -= deltaS * this.speed;
     }
-    if (KEY.D in keysDown) {
+    if (KEY.D in keysDown && !(collision(this, entity, "right"))) {
         this.anima = this.right;
         this.facing = "right";
         this.x += deltaS * this.speed;
@@ -74,7 +93,7 @@ Player.prototype.update = function(deltaS, keysDown) {
 
     // Projectiles
     if (this.delay > 0.15 && KEY.SPACE in keysDown && this.projectiles.length < 3) {
-        this.projectiles.unshift(new Projectile(this.x, this.y, this.facing));
+        this.projectiles.unshift(new Projectile(this.x, this.y, 16, 16, this.facing));
         this.delay = 0;
     }
 

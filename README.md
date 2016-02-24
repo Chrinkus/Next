@@ -15,4 +15,5 @@
 <li>Become more proficient with using Git</li>
 <li>Utilize more best practices with regards to organizing code</li>
 </ul>
+<p>Updates to project goals can be found in the wiki</p>
 

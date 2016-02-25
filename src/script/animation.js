@@ -52,9 +52,9 @@ function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip) {
                 row * spritesheet.frameHeight,  // source y
                 spritesheet.frameWidth,         // source width
                 spritesheet.frameHeight,        // source height
-                newX, y,                           // destination x, y
-                spritesheet.frameWidth,     // destination width
-                spritesheet.frameHeight);   // destination height
+                newX, y,                        // destination x, y
+                spritesheet.frameWidth,         // destination width
+                spritesheet.frameHeight);       // destination height
 
         ctx.restore();
     };

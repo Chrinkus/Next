@@ -5,7 +5,8 @@
         CW = canvas.width,
         CH = canvas.height,
         then = 0,
-        stopStart, stopMain, player, barrel,
+        entities = [],
+        stopStart, stopMain, player, barrel, crate,
         startMenu, startFields,
         pauseMenu, pauseFields;
 
@@ -31,6 +32,8 @@
             case "Start":
                 player = new Player(CW / 2, CH / 2, 64, 64);
                 barrel = new Obstacle(100, 100, 64, 64, "/src/images/Barrel.png");
+                crate = new Obstacle(800, 300, 64, 64, "/src/images/Crate.png");
+                entities = [barrel, crate];
                 player.pause = false;
                 window.cancelAnimationFrame(stopStart);
                 stopMain = window.requestAnimationFrame(main);
@@ -88,15 +91,17 @@
         if (player.pause) {
             player.draw(ctx);
             barrel.draw(ctx);
+            crate.draw(ctx);
             // Transparent backdrop
             ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
             ctx.fillRect(0, 0, CW, CH);
             pauseMenu.update(delta, keysDown);
             pauseMenu.draw(ctx);
         } else {
-            player.update(delta / 1000, keysDown, barrel);
+            player.update(delta / 1000, keysDown, entities);
             player.draw(ctx);
             barrel.draw(ctx);
+            crate.draw(ctx);
         }
 
         then = now;

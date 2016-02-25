@@ -65,30 +65,39 @@ function Player(x, y, w, h) {
 
 Player.prototype = Object.create(Actor.prototype);
 
-Player.prototype.update = function(deltaS, keysDown, entity) {
-    // Character
+Player.prototype.update = function(deltaS, keysDown, entities) {
+    var snapLoc = { x: this.x, y: this.y };
     this.delay += deltaS;
     this.speed = KEY.SHIFT in keysDown ? 256 : 128;
-    if (KEY.W in keysDown && !(collision(this, entity, "up"))) {
+    if (KEY.W in keysDown) { 
+
         this.anima = this.up;
         this.facing = "up";
         this.y -= deltaS * this.speed;
     }
-    if (KEY.S in keysDown && !(collision(this, entity, "down"))) {
+    if (KEY.S in keysDown) { 
         this.anima = this.down;
         this.facing = "down";
         this.y += deltaS * this.speed;
     }
-    if (KEY.A in keysDown && !(collision(this, entity, "left"))) {
+    if (KEY.A in keysDown) {
         this.anima = this.left;
         this.facing = "left";
         this.x -= deltaS * this.speed;
     }
-    if (KEY.D in keysDown && !(collision(this, entity, "right"))) {
+    if (KEY.D in keysDown) {
         this.anima = this.right;
         this.facing = "right";
         this.x += deltaS * this.speed;
     }
+    
+    // Collision Detect
+    if (entities.some(collision, this)) {
+        this.x = snapLoc.x;
+        this.y = snapLoc.y;
+    }
+
+    // Pause menu
     if (KEY.ESC in keysDown) { this.pause = true; }
 
     // Projectiles

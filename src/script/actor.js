@@ -21,8 +21,8 @@ Obstacle.prototype.draw = function(ctx) {
 
 function Projectile(x, y, w, h, facing) {
     "use strict";
-    this.px = x + 24;               // half of player frame width (not really?)
-    this.py = y + 32;               // half of player frame height
+    this.x = x + 24;               // half of player frame width (not really?)
+    this.y = y + 32;               // half of player frame height
     this.width = w;
     this.height = h;
     this.snapFace = facing;
@@ -31,16 +31,18 @@ function Projectile(x, y, w, h, facing) {
     this.sheet = new SpriteSheet("/src/images/Red_Projectile.png",
             this.width, this.height);
     this.fire = new Animation(this.sheet, 15, 0, 1);
+    this.impact = new Termination(this.sheet, 15, 2, 3);
+    this.anima = this.fire;
 }
 
 Projectile.prototype = Object.create(Actor.prototype);
 
 Projectile.prototype.update = function(delta) {
     switch (this.snapFace) {
-        case "up":      this.py -= this.speed * delta; break;
-        case "down":    this.py += this.speed * delta; break;
-        case "left":    this.px -= this.speed * delta; break;
-        case "right":   this.px += this.speed * delta; break;
+        case "up":      this.y -= this.speed * delta; break;
+        case "down":    this.y += this.speed * delta; break;
+        case "left":    this.x -= this.speed * delta; break;
+        case "right":   this.x += this.speed * delta; break;
     }
 }
 
@@ -108,10 +110,14 @@ Player.prototype.update = function(deltaS, keysDown, entities) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
-            proj.update(deltaS);
+            if (entities.some(collision, proj)) {
+                proj.anima = proj.impact;
+            } else {
+                proj.update(deltaS);
+            }
 
-            if (proj.px > 1000 || proj.px < 0 ||
-                    proj.py > 600 || proj.py < 0) {
+            if (proj.x > 1000 || proj.x < 0 ||
+                    proj.y > 600 || proj.y < 0) {
                 arr.splice(i, i + 1);
             }
         });
@@ -127,9 +133,9 @@ Player.prototype.draw = function(ctx) {
     ctx.restore();
 
     if (this.projectiles.length) {
-        this.projectiles.forEach(function(proj) {
-            proj.fire.update();
-            proj.fire.draw(ctx, proj.px, proj.py);
+        this.projectiles.forEach(function(proj, i, arr) {
+            if (proj.anima.update()) { arr.splice(i, i + 1); }
+            proj.anima.draw(ctx, proj.x, proj.y);
         });
     }
 }

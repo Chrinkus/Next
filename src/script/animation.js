@@ -15,47 +15,66 @@ function SpriteSheet(path, frameWidth, frameHeight) {
 
 function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip) {
     "use strict";
-    var animationSequence = []; // array holding the order of the animation
-    var currentFrame = 0;       // the current frame to draw
-    var counter = 0;            // keep track of frame rate
+    this.sprSheet = spritesheet;
+    this.frameSpeed = frameSpeed;
+    this.flip = flip;
+    this.animaSeq = []; // array holding the order of the animation
+    this.curFrame = 0;       // the current frame to draw
+    this.counter = 0;            // keep track of frame rate
 
     // create the sequence of frame numbers for the animation
-    for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++) {
-        animationSequence.push(frameNumber);
+    for (var frameNum = startFrame; frameNum <= endFrame; frameNum++) {
+        this.animaSeq.push(frameNum);
     }
+}
 
     // update the animation
-    this.update = function() {
+Animation.prototype.update = function() {
 
-        // update the next frame if it is time
-        if (counter == (frameSpeed - 1)) {
-            currentFrame = (currentFrame + 1) % animationSequence.length;
-        }
+    // update the next frame if it is time
+    if (this.counter == (this.frameSpeed - 1)) {
+        this.curFrame = (this.curFrame + 1) % this.animaSeq.length;
+    }
 
-        //update the counter
-        counter = (counter + 1) % frameSpeed;
-    };
+    //update the counter
+    this.counter = (this.counter + 1) % this.frameSpeed;
+}
 
     // draw the current frame
-    this.draw = function(ctx, x, y) {
-        // get the row and col of the frame
-        var row = Math.floor(animationSequence[currentFrame] / spritesheet.framesPerRow);
-        var col = Math.floor(animationSequence[currentFrame] % spritesheet.framesPerRow);
-        var newX = flip ? -x - spritesheet.frameWidth : x;
+Animation.prototype.draw = function(ctx, x, y) {
+    // get the row and col of the frame
+    var row = Math.floor(this.animaSeq[this.curFrame] / this.sprSheet.framesPerRow);
+    var col = Math.floor(this.animaSeq[this.curFrame] % this.sprSheet.framesPerRow);
+    var newX = this.flip ? -x - this.sprSheet.frameWidth : x;
 
-        ctx.save();
-        if (flip) { ctx.scale(-1, 1); }
+    ctx.save();
+    if (this.flip) { ctx.scale(-1, 1); }
 
-        ctx.drawImage(
-                spritesheet.image,              // image
-                col * spritesheet.frameWidth,   // source x
-                row * spritesheet.frameHeight,  // source y
-                spritesheet.frameWidth,         // source width
-                spritesheet.frameHeight,        // source height
-                newX, y,                        // destination x, y
-                spritesheet.frameWidth,         // destination width
-                spritesheet.frameHeight);       // destination height
+    ctx.drawImage(
+            this.sprSheet.image,                // image
+            col * this.sprSheet.frameWidth,     // source x
+            row * this.sprSheet.frameHeight,    // source y
+            this.sprSheet.frameWidth,           // source width
+            this.sprSheet.frameHeight,          // source height
+            newX, y,                            // destination x, y
+            this.sprSheet.frameWidth,           // destination width
+            this.sprSheet.frameHeight);         // destination height
 
-        ctx.restore();
-    };
+    ctx.restore();
+}
+
+function Termination(spritesheet, frameSpeed, startFrame, endFrame, flip) {
+    "use strict";
+    Animation.call(this, spritesheet, frameSpeed, startFrame, endFrame, flip);
+}
+
+Termination.prototype = Object.create(Animation.prototype);
+
+Termination.prototype.update = function() {
+    if (this.counter == (this.frameSpeed - 1)) {
+        this.curFrame = (this.curFrame + 1) % this.animaSeq.length;
+    }
+    this.counter = (this.counter + 1) % this.frameSpeed;
+
+    if (this.counter === 0 && this.curFrame === 0) { return "done"; }
 }

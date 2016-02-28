@@ -16,6 +16,8 @@ function SpriteSheet(path, frameWidth, frameHeight) {
 function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip) {
     "use strict";
     this.sprSheet = spritesheet;
+    this.halfW = spritesheet.frameWidth / 2;
+    this.halfH = spritesheet.frameHeight / 2;
     this.frameSpeed = frameSpeed;
     this.flip = flip;
     this.animaSeq = []; // array holding the order of the animation
@@ -49,14 +51,14 @@ Animation.prototype.draw = function(ctx, x, y) {
 
     ctx.save();
     if (this.flip) { ctx.scale(-1, 1); }
-
+    
     ctx.drawImage(
             this.sprSheet.image,                // image
             col * this.sprSheet.frameWidth,     // source x
             row * this.sprSheet.frameHeight,    // source y
             this.sprSheet.frameWidth,           // source width
             this.sprSheet.frameHeight,          // source height
-            newX, y,                            // destination x, y
+            newX, y,                         // destination x, y
             this.sprSheet.frameWidth,           // destination width
             this.sprSheet.frameHeight);         // destination height
 
@@ -76,5 +78,18 @@ Termination.prototype.update = function() {
     }
     this.counter = (this.counter + 1) % this.frameSpeed;
 
+    // this is difference, returns "done" instead of undefined when complete
     if (this.counter === 0 && this.curFrame === 0) { return "done"; }
+}
+
+Animation.prototype.orient = function(ctx, x, y, facing) {
+    // Move origin to middle of sprite
+    ctx.translate(x + this.halfW, y + this.halfH);
+
+    // Rotate sprite accordingly
+    switch(facing) {
+        case "down":    ctx.rotate(Math.PI / 2);    break;
+        case "left":    ctx.rotate(Math.PI);        break;
+        case "up":      ctx.rotate(Math.PI * 1.5);  break;
+    }
 }

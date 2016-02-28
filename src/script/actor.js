@@ -31,7 +31,7 @@ function Projectile(x, y, w, h, facing) {
     this.sheet = new SpriteSheet("/src/images/Red_Projectile.png",
             this.width, this.height);
     this.fire = new Animation(this.sheet, 15, 0, 1);
-    this.impact = new Termination(this.sheet, 15, 2, 3);
+    this.impact = new Termination(this.sheet, 8, 2, 3);
     this.anima = this.fire;
 }
 
@@ -134,8 +134,17 @@ Player.prototype.draw = function(ctx) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
+            // remove if termination finished
             if (proj.anima.update()) { arr.splice(i, i + 1); }
-            proj.anima.draw(ctx, proj.x, proj.y);
+
+            if (proj.anima === proj.impact) {
+                ctx.save();
+                proj.anima.orient(ctx, proj.x, proj.y, proj.snapFace);
+                proj.anima.draw(ctx, -proj.anima.halfW, -proj.anima.half);
+                ctx.restore();
+            } else {
+                proj.anima.draw(ctx, proj.x, proj.y);
+            }
         });
     }
 }

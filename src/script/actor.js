@@ -103,8 +103,12 @@ Player.prototype.update = function(deltaS, keysDown, entities) {
     if (KEY.ESC in keysDown) { this.pause = true; }
 
     // Projectiles
-    if (this.delay > 0.15 && KEY.SPACE in keysDown && this.projectiles.length < 3) {
-        this.projectiles.unshift(new Projectile(this.x, this.y, 16, 16, this.facing));
+    if (this.delay > 0.15 &&
+            KEY.SPACE in keysDown &&
+            this.projectiles.length < 3) {
+
+        this.projectiles.unshift(new Projectile(this.x, this.y, 16, 16,
+                                                this.facing));
         this.delay = 0;
     }
 
@@ -116,8 +120,7 @@ Player.prototype.update = function(deltaS, keysDown, entities) {
                 proj.update(deltaS);
             }
 
-            if (proj.x > 1000 || proj.x < 0 ||
-                    proj.y > 600 || proj.y < 0) {
+            if (proj.x > 1000 || proj.x < 0 || proj.y > 600 || proj.y < 0) {
                 arr.splice(i, i + 1);
             }
         });
@@ -140,7 +143,7 @@ Player.prototype.draw = function(ctx) {
             if (proj.anima === proj.impact) {
                 ctx.save();
                 proj.anima.orient(ctx, proj.x, proj.y, proj.snapFace);
-                proj.anima.draw(ctx, -proj.anima.halfW, -proj.anima.half);
+                proj.anima.draw(ctx, -proj.anima.halfW, -proj.anima.halfH);
                 ctx.restore();
             } else {
                 proj.anima.draw(ctx, proj.x, proj.y);

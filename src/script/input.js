@@ -1,4 +1,6 @@
-const KEY = {
+var GAME = GAME || {};
+
+GAME.KEY = {
     W: 87,
     A: 65,
     S: 83,
@@ -13,4 +15,4 @@ const KEY = {
     SHIFT: 16
 };
 
-var keysDown = {};
+GAME.keysDown = {};

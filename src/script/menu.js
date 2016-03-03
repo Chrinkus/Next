@@ -46,7 +46,10 @@ Menu.prototype.draw = function(ctx) {
     ctx.restore();
 }
 
-Menu.prototype.update = function(delta, keysDown) {
+Menu.prototype.update = function(delta) {
+    var keysDown = GAME.keysDown;
+    var KEY = GAME.KEY;
+
     this.delay += delta;
     if (this.delay > 250) {
         if (this.i > 0 &&
@@ -62,5 +65,33 @@ Menu.prototype.update = function(delta, keysDown) {
         if (KEY.ENTER in keysDown) {
             this.selections(this.fields[this.i]);
         }
+    }
+}
+
+Menu.prototype.reset = function() {
+    this.i = 0;
+    this.delay = 0;
+}
+
+Menu.prototype.selections = function(field) {
+    switch (field) {
+        case "Start":
+            GAME.gameplayInit();
+            window.cancelAnimationFrame(GAME.stopStart);
+            GAME.stopMain = window.requestAnimationFrame(main);
+            break;
+        case "Resume":
+            GAME.player.pause = false;
+            break;
+        case "Quit":
+            for (var menu in GAME.menus) {
+                menu.reset();
+            }
+            window.cancelAnimationFrame(GAME.stopMain);
+            GAME.stopStart = window.requestAnimationFrame(start);
+            break;
+        case "Exit":
+            // Do for exit
+            break;
     }
 }

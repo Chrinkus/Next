@@ -67,8 +67,11 @@ function Player(x, y, w, h) {
 
 Player.prototype = Object.create(Actor.prototype);
 
-Player.prototype.update = function(deltaS, keysDown, entities) {
+Player.prototype.update = function(deltaS) {
+    var keysDown = GAME.keysDown;
+    var KEY = GAME.KEY;
     var snapLoc = { x: this.x, y: this.y };
+
     this.delay += deltaS;
     this.speed = KEY.SHIFT in keysDown ? 256 : 128;
     if (KEY.W in keysDown) { 
@@ -94,7 +97,7 @@ Player.prototype.update = function(deltaS, keysDown, entities) {
     }
     
     // Collision Detect
-    if (entities.some(collision, this)) {
+    if (GAME.entities.some(collision, this)) {
         this.x = snapLoc.x;
         this.y = snapLoc.y;
     }
@@ -114,7 +117,7 @@ Player.prototype.update = function(deltaS, keysDown, entities) {
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
-            if (entities.some(collision, proj)) {
+            if (GAME.entities.some(collision, proj)) {
                 proj.anima = proj.impact;
             } else {
                 proj.update(deltaS);

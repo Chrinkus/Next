@@ -85,7 +85,7 @@ Menu.prototype.selections = function(field) {
             break;
         case "Quit":
             for (var menu in GAME.menus) {
-                menu.reset();
+                GAME.menus[menu].reset();
             }
             window.cancelAnimationFrame(GAME.stopMain);
             GAME.stopStart = window.requestAnimationFrame(GAME.start);

@@ -78,7 +78,7 @@ Menu.prototype.selections = function(field) {
         case "Start":
             GAME.gameplayInit();
             window.cancelAnimationFrame(GAME.stopStart);
-            GAME.stopMain = window.requestAnimationFrame(main);
+            GAME.stopMain = window.requestAnimationFrame(GAME.main);
             break;
         case "Resume":
             GAME.player.pause = false;
@@ -88,7 +88,7 @@ Menu.prototype.selections = function(field) {
                 menu.reset();
             }
             window.cancelAnimationFrame(GAME.stopMain);
-            GAME.stopStart = window.requestAnimationFrame(start);
+            GAME.stopStart = window.requestAnimationFrame(GAME.start);
             break;
         case "Exit":
             // Do for exit

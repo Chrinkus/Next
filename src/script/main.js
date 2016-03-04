@@ -1,78 +1,72 @@
 var GAME = GAME || {};
 
-GAME.ctx = GAME.canvas.getContext("2d");
-GAME.CW = GAME.canvas.width;
-GAME.CH = GAME.canvas.height;
-
-GAME.clear = function() {
+(function() {
     "use strict";
-    GAME.ctx.clearRect(0, 0, GAME.CW, GAME.CH);
-};
+    var canvas = document.getElementById("viewport"),
+        ctx = canvas.getContext("2d"),
+        then = 0, that = this;
 
-GAME.fill = function(style) {
-    "use strict";
-    GAME.ctx.fillStyle = style;
-    GAME.ctx.fillRect(0, 0, GAME.CW, GAME.CH);
-};
+    const CW = canvas.width;
+    const CH = canvas.height;
 
-addEventListener("keydown", function(e) {
-    "use strict";
-    GAME.keysDown[e.keyCode] = true;
-}, false);
+    this.halfW = CW / 2;
+    this.halfH = CH / 2;
 
-addEventListener("keyup", function(e) {
-    "use strict";
-    delete GAME.keysDown[e.keyCode];
-}, false);
-
-GAME.menusInit();
-
-function start(tStamp) {
-    "use strict";
-    GAME.stopStart = window.requestAnimationFrame(start);
-    var ctx = GAME.ctx;
-    var now = Math.floor(tStamp);
-    var delta = now - GAME.then;
-
-    GAME.clear();
-
-    // Background
-    GAME.fill("#000");
-
-    // Menu
-    GAME.menus.start.update(delta);
-    GAME.menus.start.draw(ctx);
-
-    GAME.then = now;
-}
-GAME.stopStart = window.requestAnimationFrame(start);
-
-function main(tStamp) {
-    "use strict";
-    GAME.stopMain = window.requestAnimationFrame(main);
-    var ctx = GAME.ctx;
-    var now = Math.floor(tStamp);
-    var delta = now - GAME.then;
-
-    GAME.clear();
-
-    //Background
-    GAME.fill("#999");
-
-    if (GAME.player.pause) {
-        GAME.player.draw(ctx);
-        GAME.barrel.draw(ctx);
-        GAME.crate.draw(ctx);
-        // Transparent backdrop
-        GAME.fill("rgba(0, 0, 0, 0.6)");
-        GAME.menus.pause.update(delta);
-        GAME.menus.pause.draw(ctx);
-    } else {
-        GAME.player.update(delta / 1000);
-        GAME.player.draw(ctx);
-        GAME.barrel.draw(ctx);
-        GAME.crate.draw(ctx);
+    function clear() {
+        ctx.clearRect(0, 0, CW, CH);
     }
 
-    GAME.then = now;
-}
+    function fill(style) {
+        ctx.fillStyle = style;
+        ctx.fillRect(0, 0, CW, CH);
+    }
+
+    this.inputInit();
+    this.menusInit();
+
+    this.start = function(tStamp) {
+        that.stopStart = window.requestAnimationFrame(that.start);
+        var now = Math.floor(tStamp);
+        var delta = now - then;
+
+        clear();
+
+        // Background
+        fill("#000");
+
+        // Menu
+        that.menus.start.update(delta);
+        that.menus.start.draw(ctx);
+
+        then = now;
+    };
+    this.stopStart = window.requestAnimationFrame(this.start);
+
+    this.main = function(tStamp) {
+        that.stopMain = window.requestAnimationFrame(that.main);
+        var now = Math.floor(tStamp);
+        var delta = now - then;
+
+        clear();
+
+        //Background
+        fill("#999");
+
+        if (that.player.pause) {
+            that.player.draw(ctx);
+            that.barrel.draw(ctx);
+            that.crate.draw(ctx);
+            // Transparent backdrop
+            fill("rgba(0, 0, 0, 0.6)");
+            that.menus.pause.update(delta);
+            that.menus.pause.draw(ctx);
+        } else {
+            that.player.update(delta / 1000);
+            that.player.draw(ctx);
+            that.barrel.draw(ctx);
+            that.crate.draw(ctx);
+        }
+
+        then = now;
+    };
+}).apply(GAME);

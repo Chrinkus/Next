@@ -35,8 +35,7 @@ var GAME = GAME || {};
         fill("#000");
 
         // Menu
-        that.menus.start.update(delta);
-        that.menus.start.draw(ctx);
+        that.menusProcess("start", delta, ctx);
 
         then = now;
     };
@@ -56,15 +55,16 @@ var GAME = GAME || {};
             that.player.draw(ctx);
             that.barrel.draw(ctx);
             that.crate.draw(ctx);
+            that.blueCube.draw(ctx);
             // Transparent backdrop
             fill("rgba(0, 0, 0, 0.6)");
-            that.menus.pause.update(delta);
-            that.menus.pause.draw(ctx);
+            that.menusProcess("pause", delta, ctx);
         } else {
             that.player.update(delta / 1000);
             that.player.draw(ctx);
             that.barrel.draw(ctx);
             that.crate.draw(ctx);
+            that.blueCube.draw(ctx);
         }
 
         then = now;

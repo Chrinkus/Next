@@ -76,7 +76,7 @@ Menu.prototype.reset = function() {
 Menu.prototype.selections = function(field) {
     switch (field) {
         case "Start":
-            GAME.gameplayInit();
+            GAME.scenarioInit();
             window.cancelAnimationFrame(GAME.stopStart);
             GAME.stopMain = window.requestAnimationFrame(GAME.main);
             break;

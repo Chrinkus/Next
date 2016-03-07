@@ -154,3 +154,18 @@ Player.prototype.draw = function(ctx) {
         });
     }
 }
+
+function NPC(x, y, w, h, imgSrc) {
+    "use strict";
+    Actor.call(this, x, y, w, h);
+    this.sheet = new SpriteSheet(imgSrc, w, h);
+    this.idle = new Animation(this.sheet, 15, 0, 1, false);
+    this.anima = this.idle;
+}
+
+NPC.prototype = Object.create(Actor.prototype);
+
+NPC.prototype.draw = function(ctx) {
+    this.anima.update();
+    this.anima.draw(ctx, this.x, this.y);
+};

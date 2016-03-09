@@ -4,10 +4,6 @@ var GAME = GAME || {};
 // Intention is to have this object hold any utility type menus
 GAME.menus = {};
 
-// Scenario object
-// This will be the collection of entities for now
-GAME.scenario = {};
-
 GAME.menusInit = function() {
     "use strict";
     this.menus.start = new Menu(this.halfW, this.halfH, ["Start", "Exit"], 32);
@@ -20,11 +16,45 @@ GAME.menusProcess = function(menu, delta, ctx) {
     this.menus[menu].draw(ctx);
 };
 
-GAME.scenarioInit = function() {
+// Scenario object
+// This will be the collection of entities for now
+GAME.scenario = {
+    animators: [],
+    staticImgs: [],
+    collisionEntities: []
+};
+
+GAME.scenario.init = function() {
     "use strict";
-    this.player = new Player(this.halfW, this.halfH, 64, 64);
-    this.barrel = new Obstacle(100, 100, 64, 64, "/src/images/Barrel.png");
-    this.crate = new Obstacle(800, 300, 64, 64, "/src/images/Crate.png");
-    this.blueCube = new NPC(750, 150, 64, 64, "/src/images/Blue_Cube.png");
-    this.entities = [this.barrel, this.crate, this.blueCube];
+    this.player = new Player("/src/images/Red_Cube.png", 64, 64);
+    this.barrel = new Actor("/src/images/Barrel.png", 64, 64, 100, 100);
+    this.crate = new Actor("/src/images/Crate.png", 64, 64, 800, 300);
+    this.blueCube = new NPC("/src/images/Blue_Cube.png", 64, 64, 750, 150);
+
+    this.animators = ["player", "blueCube"];
+    this.staticImgs = ["barrel", "crate"];
+    this.collisionEntities = [this.barrel, this.crate, this.blueCube];
+};
+
+GAME.scenario.update = function(delta) {
+    "use strict";
+    if (GAME.KEY.ESC in GAME.keysDown) { this.pause = true; }
+    if (!this.pause) { this.player.update(delta / 1000); }
+};
+
+GAME.scenario.draw = function(ctx) {
+    "use strict";
+    GAME.clear();
+    GAME.fill("#999");
+
+    this.staticImgs.forEach(function(element) {
+        GAME.scenario[element].draw(ctx);
+    });
+    this.animators.forEach(function(element) {
+        GAME.scenario[element].draw(ctx);
+    });
+    if (this.pause) {
+        GAME.fill("rgba(0, 0, 0, 0.6)");
+        GAME.menusProcess("pause", delta, ctx);
+    }
 };

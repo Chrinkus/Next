@@ -12,11 +12,11 @@ var GAME = GAME || {};
     this.halfW = CW / 2;
     this.halfH = CH / 2;
 
-    function clear() {
+    this.clear = function() {
         ctx.clearRect(0, 0, CW, CH);
     }
 
-    function fill(style) {
+    this.fill = function(style) {
         ctx.fillStyle = style;
         ctx.fillRect(0, 0, CW, CH);
     }
@@ -29,10 +29,8 @@ var GAME = GAME || {};
         var now = Math.floor(tStamp);
         var delta = now - then;
 
-        clear();
-
-        // Background
-        fill("#000");
+        that.clear();
+        that.fill("#000");
 
         // Menu
         that.menusProcess("start", delta, ctx);
@@ -46,26 +44,8 @@ var GAME = GAME || {};
         var now = Math.floor(tStamp);
         var delta = now - then;
 
-        clear();
-
-        //Background
-        fill("#999");
-
-        if (that.player.pause) {
-            that.player.draw(ctx);
-            that.barrel.draw(ctx);
-            that.crate.draw(ctx);
-            that.blueCube.draw(ctx);
-            // Transparent backdrop
-            fill("rgba(0, 0, 0, 0.6)");
-            that.menusProcess("pause", delta, ctx);
-        } else {
-            that.player.update(delta / 1000);
-            that.player.draw(ctx);
-            that.barrel.draw(ctx);
-            that.crate.draw(ctx);
-            that.blueCube.draw(ctx);
-        }
+        that.scenario.update(delta);
+        that.scenario.draw(ctx);
 
         then = now;
     };

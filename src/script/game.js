@@ -30,10 +30,12 @@ GAME.scenario.init = function() {
     this.barrel = new Actor("/src/images/Barrel.png", 64, 64, 100, 100);
     this.crate = new Actor("/src/images/Crate.png", 64, 64, 800, 300);
     this.blueCube = new NPC("/src/images/Blue_Cube.png", 64, 64, 750, 150);
+    this.yellowCube = new NPC("/src/images/Yellow_Cube.png", 64, 64, 128, 512);
 
-    this.animators = ["player", "blueCube"];
+    this.animators = ["player", "blueCube", "yellowCube"];
     this.staticImgs = ["barrel", "crate"];
-    this.collisionEntities = [this.barrel, this.crate, this.blueCube];
+    this.collisionEntities = [this.barrel, this.crate, this.blueCube,
+                              this.yellowCube];
 };
 
 GAME.scenario.update = function(delta) {

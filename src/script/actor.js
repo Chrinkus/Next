@@ -19,8 +19,17 @@ Actor.prototype.draw = function(ctx) {
 function NPC(imgSrc, w, h, x, y) {
     "use strict";
     Actor.call(this, null, w, h, x, y);
+    this.delay = 0;
+    this.speed = 128;
+    this.facing = "";
+
+    // Animations
     this.sheet = new SpriteSheet(imgSrc, w, h);
     this.idle = new Animation(this.sheet, 15, 0, 1, false);
+    this.down = new Animation(this.sheet, 15, 2, 3, false);
+    this.up = new Animation(this.sheet, 15, 4, 5, false);
+    this.left = new Animation(this.sheet, 15, 6, 7, false);
+    this.right = new Animation(this.sheet, 15, 6, 7, true);
     this.anima = this.idle;
 }
 
@@ -31,20 +40,25 @@ NPC.prototype.draw = function(ctx) {
     this.anima.draw(ctx, this.x, this.y);
 };
 
+NPC.prototype.wander = function(delta) {
+    this.delay += delta;
+    if (!this.facing && this.delay > 2000) {
+        this.facing = GAME.directions[Math.floor(Math.random() * 4)];
+        this.anima = this[this.facing];
+    } else if (this.delay > 2500) {
+        this.facing = "";
+        this.delay = 0;
+    } else {
+        Projectile.prototype.update.call(this, delta / 1000);
+    }
+};
+
 function Player(imgSrc, w, h, x, y) {
     "use strict";
     NPC.call(this, imgSrc, w, h, x, y);
-    this.speed = 128;
     this.pause = false;
     this.facing = "left";           // Default facing
     this.projectiles = [];
-    this.delay = 0;
-
-    // Extra player-specific animations
-    this.down = new Animation(this.sheet, 15, 2, 3, false);
-    this.up = new Animation(this.sheet, 15, 4, 5, false);
-    this.left = new Animation(this.sheet, 15, 6, 7, false);
-    this.right = new Animation(this.sheet, 15, 6, 7, true);
 }
 
 Player.prototype = Object.create(NPC.prototype);
@@ -128,7 +142,7 @@ Player.prototype.draw = function(ctx) {
 
             if (proj.anima === proj.impact) {
                 ctx.save();
-                proj.anima.orient(ctx, proj.x, proj.y, proj.snapFace);
+                proj.anima.orient(ctx, proj.x, proj.y, proj.facing);
                 proj.anima.draw(ctx, -proj.anima.halfW, -proj.anima.halfH);
                 ctx.restore();
             } else {
@@ -144,7 +158,7 @@ function Projectile(imgSrc, w, h, x, y, facing) {
     this.y = y + 32;               // half of player frame height
     this.width = w;
     this.height = h;
-    this.snapFace = facing;
+    this.facing = facing;
     this.speed = 512;
 
     this.sheet = new SpriteSheet(imgSrc, this.width, this.height);
@@ -156,7 +170,7 @@ function Projectile(imgSrc, w, h, x, y, facing) {
 Projectile.prototype = Object.create(Actor.prototype);
 
 Projectile.prototype.update = function(delta) {
-    switch (this.snapFace) {
+    switch (this.facing) {
         case "up":      this.y -= this.speed * delta; break;
         case "down":    this.y += this.speed * delta; break;
         case "left":    this.x -= this.speed * delta; break;

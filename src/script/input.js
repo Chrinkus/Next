@@ -17,6 +17,8 @@ GAME.inputInit = function() {
     };
     this.KEY = KEY;
     this.keysDown = {};
+    
+    this.directions = ["up", "down", "left", "right"];
 
     addEventListener("keydown", function(e) {
         GAME.keysDown[e.keyCode] = true;

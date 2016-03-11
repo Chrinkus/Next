@@ -5,3 +5,11 @@ function collision(entity) {
         this.y < entity.y + entity.height &&
         this.y + this.height > entity.y;
 }
+
+function outside(npc) {
+    "use strict";
+    return npc.x > npc.anchor.x + npc.radius ||
+        npc.x < npc.anchor.x - npc.radius ||
+        npc.y > npc.anchor.y + npc.radius ||
+        npc.y < npc.anchor.y - npc.radius;
+}

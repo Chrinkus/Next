@@ -16,9 +16,11 @@ Actor.prototype.draw = function(ctx) {
 };
 
 // StaticNPC class => non-moving NPCs
-function NPC(imgSrc, w, h, x, y) {
+function NPC(imgSrc, w, h, x, y, anchor, radius) {
     "use strict";
     Actor.call(this, null, w, h, x, y);
+    if (anchor) { this.anchor = anchor; }
+    if (radius) { this.radius = radius; }
     this.delay = 0;
     this.speed = 128;
     this.facing = "";
@@ -41,6 +43,7 @@ NPC.prototype.draw = function(ctx) {
 };
 
 NPC.prototype.wander = function(delta) {
+    var snapLoc = { x: this.x, y: this.y };
     this.delay += delta;
     if (!this.facing && this.delay > 2000) {
         this.facing = GAME.directions[Math.floor(Math.random() * 4)];
@@ -50,6 +53,10 @@ NPC.prototype.wander = function(delta) {
         this.delay = 0;
     } else {
         Projectile.prototype.update.call(this, delta / 1000);
+        if (outside(this)) {
+            this.x = snapLoc.x;
+            this.y = snapLoc.y;
+        }
     }
 };
 

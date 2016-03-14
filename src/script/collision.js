@@ -28,7 +28,7 @@ function Hash(cellSize, mapW, mapH) {
                 minY: i * cellSize,
                 maxX: j * cellSize + cellSize - 1,
                 maxY: i * cellSize + cellSize - 1,
-                bucket: []
+                bucket: {}
             };
         }
     }
@@ -38,34 +38,34 @@ Hash.prototype.populate = function(entities) {
     var that = this;
 
     entities.forEach(function(entity) {
-        var xOrigLoc = Math.floor(entity.x / that.cellSize);
-        var yOrigLoc = Math.floor(entity.y / that.cellSize);
-        var xMaxLoc = Math.floor((entity.x + entity.width) / that.cellSize);
-        var yMaxLoc = Math.floor((entity.y + entity.height) / that.cellSize);
+        // fetch all buckets that entity currently occupies
+        entity.getBuckets(that.cellSize, that.cols);
 
-        var locations = [
-            yOrigLoc * that.cols + xOrigLoc,    // top left corner
-            yOrigLoc * that.cols + xMaxLoc,     // top right corner
-            yMaxLoc * that.cols + xOrigLoc,     // bottom left corner
-            yMaxLoc * that.cols + xMaxLoc       // bottom right corner
-        ];
-
-        // assumes array is sequential
-        entity.locations = locations.filter(function(ele, i, arr) {
-            return ele !== arr[i - 1];
-        });
-
-        entity.locations.forEach(function(loc) {
-            hash[loc].bucket.push(entity);
+        entity.buckets.forEach(function(loc) {
+            that.hash[loc].bucket[entity] = entity;
         });
     });
 };
 
 Hash.prototype.move = function(entity) {
-    var oldLocations = entity.locations;        // need
-    var newLocations = entity.getLocations();   // need
+    var oldBuckets = entity.buckets.slice();
+    entity.getbuckets();
 
     // compare arrays
-    // if true, location remains unchanged
-    // if false, recalculate new location
+    // if true, buckets remains unchanged
+    if (oldBuckets.length === entity.buckets.length &&
+        oldBuckets.every(function(value, i) {
+            return value === entity.buckets[i];
+        });
+    ) { return; }
+
+    // if false, delete entity out of old buckets...
+    oldBuckets.forEach(function(buc) {
+        delete that.hash[buc].bucket[entity.id];
+    });
+
+    // and add entity to new buckets
+    entity.buckets.forEach(function(buc) {
+        that.hash[buc].bucket[entity.id] = entity;
+    });
 };

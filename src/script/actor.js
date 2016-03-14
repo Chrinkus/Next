@@ -9,11 +9,31 @@ function Actor(imgSrc, w, h, x, y) {
     this.height = h;
     this.x = x || 0;
     this.y = y || 0;
-    this.locations = [];
+    this.buckets = [];
 }
 
 Actor.prototype.draw = function(ctx) {
     ctx.drawImage(this.img, this.x, this.y);
+};
+
+Actor.prototype.getBuckets = function(cellSize, cols) {
+    var xOrigLoc = Math.floor(this.x / cellSize);
+    var yOrigLoc = Math.floor(this.y / cellSize);
+    var xMaxLoc = Math.floor((this.x + this.width) / cellSize);
+    var yMaxLoc = Math.floor((this.y + this.height) / cellSize);
+
+    // All possible buckets - may contain duplicates
+    var buckets = [
+        yOrigLoc * cols + xOrigLoc,    // top left corner
+        yOrigLoc * cols + xMaxLoc,     // top right corner
+        yMaxLoc * cols + xOrigLoc,     // bottom left corner
+        yMaxLoc * cols + xMaxLoc       // bottom right corner
+    ];
+
+    // Remove duplicates - assumes array is sorted
+    this.buckets = buckets.filter(function(ele, i, arr) {
+        return ele !== arr[i - 1];
+    });
 };
 
 // StaticNPC class => non-moving NPCs

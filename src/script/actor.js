@@ -9,6 +9,7 @@ function Actor(imgSrc, w, h, x, y) {
     this.height = h;
     this.x = x || 0;
     this.y = y || 0;
+    this.locations = [];
 }
 
 Actor.prototype.draw = function(ctx) {

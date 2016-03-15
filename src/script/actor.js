@@ -1,6 +1,7 @@
 // Actor class => good for static images
-function Actor(imgSrc, w, h, x, y) {
+function Actor(id, imgSrc, w, h, x, y) {
     "use strict";
+    this.id = id;
     if (imgSrc) {
         this.img = new Image();
         this.img.src = imgSrc;
@@ -37,9 +38,9 @@ Actor.prototype.getBuckets = function(cellSize, cols) {
 };
 
 // StaticNPC class => non-moving NPCs
-function NPC(imgSrc, w, h, x, y, anchor, radius) {
+function NPC(id, imgSrc, w, h, x, y, anchor, radius) {
     "use strict";
-    Actor.call(this, null, w, h, x, y);
+    Actor.call(this, id, null, w, h, x, y);
     if (anchor) { this.anchor = anchor; }
     if (radius) { this.radius = radius; }
     this.delay = 0;
@@ -81,9 +82,9 @@ NPC.prototype.wander = function(delta) {
     }
 };
 
-function Player(imgSrc, w, h, x, y) {
+function Player(id, imgSrc, w, h, x, y) {
     "use strict";
-    NPC.call(this, imgSrc, w, h, x, y);
+    NPC.call(this, id, imgSrc, w, h, x, y);
     this.pause = false;
     this.facing = "left";           // Default facing
     this.projectiles = [];

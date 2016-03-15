@@ -48,24 +48,41 @@ Hash.prototype.populate = function(entities) {
 };
 
 Hash.prototype.move = function(entity) {
-    var oldBuckets = entity.buckets.slice();
+    // this method fires after entity movement has been processed
+    // new buckets are calculated and old buckets saved
+    // entity is then deleted from old hash locations and added to new ones
+    // collision detection can then be calculated
+    // if collision occurs, don't forget to revert buckets to snapBuc
+
+    var that = this;
+    var snapBuc = entity.buckets.slice();
     entity.getbuckets();
 
     // compare arrays
     // if true, buckets remains unchanged
-    if (oldBuckets.length === entity.buckets.length &&
-        oldBuckets.every(function(value, i) {
+    if (snapBuc.length === entity.buckets.length && 
+        snapBuc.every(function(value, i) { 
             return value === entity.buckets[i];
+        })) {
+        // something
+    } else {
+        // if false, delete entity out of old buckets...
+        snapBuc.forEach(function(buc) {
+            delete that.hash[buc].bucket[entity.id];
         });
-    ) { return; }
 
-    // if false, delete entity out of old buckets...
-    oldBuckets.forEach(function(buc) {
-        delete that.hash[buc].bucket[entity.id];
-    });
+        // and add entity to new buckets
+        entity.buckets.forEach(function(buc) {
+            that.hash[buc].bucket[entity.id] = entity;
+        });
+    }
 
-    // and add entity to new buckets
     entity.buckets.forEach(function(buc) {
-        that.hash[buc].bucket[entity.id] = entity;
-    });
+        for (var ele in that.hash[buc].bucket) {
+            if (collision(that.hash[buc].bucket[ele])) {
+                return true;
+            }
+        }
+    })
+
 };

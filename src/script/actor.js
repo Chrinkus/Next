@@ -121,14 +121,16 @@ Player.prototype.update = function(deltaS) {
         this.x += deltaS * this.speed;
     }
     
-    // Collision Detect
+    /* Collision Detect
     if (GAME.scenario.collisionEntities.some(collision, this)) {
         this.x = snapLoc.x;
         this.y = snapLoc.y;
     }
-
-    // Pause menu
-    //if (KEY.ESC in keysDown) { this.pause = true; }
+    */
+    if (GAME.scenario.hash.testCollision(this)) {
+        this.x = snapLoc.x;
+        this.y = snapLoc.y;
+    }
 
     // Projectiles
     if (this.delay > 0.15 &&

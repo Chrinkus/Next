@@ -26,7 +26,7 @@ GAME.scenario = {
 
 GAME.scenario.init = function() {
     "use strict";
-    this.player = new Player("p1", "/src/images/Red_Cube.png", 64, 64);
+    this.player = new Player("p1", "/src/images/Red_Cube.png", 64, 64, 10, 10);
     this.barrel = new Actor("a1", "/src/images/Barrel.png", 64, 64, 100, 100);
     this.crate = new Actor("a2", "/src/images/Crate.png", 64, 64, 800, 300);
     this.blueCube = new NPC("n1", "/src/images/Blue_Cube.png", 64, 64, 750, 150);
@@ -35,8 +35,10 @@ GAME.scenario.init = function() {
 
     this.animators = ["player", "blueCube", "yellowCube"];
     this.staticImgs = ["barrel", "crate"];
-    this.collisionEntities = [this.barrel, this.crate, this.blueCube,
-                              this.yellowCube];
+    this.collisionEntities = [this.player, this.barrel, this.crate,
+                              this.blueCube, this.yellowCube];
+    this.hash = new Hash(128, 1024, 640);
+    this.hash.populate(this.collisionEntities);
 };
 
 GAME.scenario.update = function(delta) {

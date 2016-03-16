@@ -1,9 +1,9 @@
-function collision(entity) {
+function collision(entity, against) {
     "use strict";
-    return this.x < entity.x + entity.width &&
-        this.x + this.width > entity.x &&
-        this.y < entity.y + entity.height &&
-        this.y + this.height > entity.y;
+    return entity.x < against.x + against.width &&
+        entity.x + entity.width > against.x &&
+        entity.y < against.y + against.height &&
+        entity.y + entity.height > against.y;
 }
 
 function outside(npc) {
@@ -16,14 +16,14 @@ function outside(npc) {
 
 function Hash(cellSize, mapW, mapH) {
     "use strict";
-    this.hash = [];
+    this.table = [];
     this.cellSize = cellSize;
     this.cols = Math.ceil(mapW / cellSize);
     this.rows = Math.ceil(mapH / cellSize);
 
     for (var i = 0; i < this.rows; i++) {
         for (var j = 0; j < this.cols; j++) {
-            this.hash[i * this.cols + j] = {
+            this.table[i * this.cols + j] = {
                 minX: j * cellSize,
                 minY: i * cellSize,
                 maxX: j * cellSize + cellSize - 1,
@@ -42,47 +42,63 @@ Hash.prototype.populate = function(entities) {
         entity.getBuckets(that.cellSize, that.cols);
 
         entity.buckets.forEach(function(loc) {
-            that.hash[loc].bucket[entity] = entity;
+            that.table[loc].bucket[entity] = entity;
         });
     });
 };
 
-Hash.prototype.move = function(entity) {
+Hash.prototype.testCollision = function(entity) {
     // this method fires after entity movement has been processed
     // new buckets are calculated and old buckets saved
-    // entity is then deleted from old hash locations and added to new ones
     // collision detection can then be calculated
     // if collision occurs, don't forget to revert buckets to snapBuc
 
     var that = this;
+    // create omit list adding entity id
+    var omitted = [entity.id];
     var snapBuc = entity.buckets.slice();
-    entity.getbuckets();
+    entity.getBuckets(this.cellSize, this.cols);
 
-    // compare arrays
-    // if true, buckets remains unchanged
-    if (snapBuc.length === entity.buckets.length && 
-        snapBuc.every(function(value, i) { 
-            return value === entity.buckets[i];
-        })) {
-        // something
-    } else {
-        // if false, delete entity out of old buckets...
-        snapBuc.forEach(function(buc) {
-            delete that.hash[buc].bucket[entity.id];
-        });
-
-        // and add entity to new buckets
-        entity.buckets.forEach(function(buc) {
-            that.hash[buc].bucket[entity.id] = entity;
-        });
-    }
-
-    entity.buckets.forEach(function(buc) {
-        for (var ele in that.hash[buc].bucket) {
-            if (collision(that.hash[buc].bucket[ele])) {
-                return true;
+    if (entity.buckets.some(function(buc) {
+        for (var ele in that.table[buc].bucket) {
+            // test if id already tested
+            if (omitted.some(function(id) {
+                return id === ele.id;
+            })) {
+                // if true skip this ele
+                return;
+            } else {
+                // if not yet tested add to tested list
+                omitted.push(ele.id);
+                // then test for collision
+                return collision(entity, ele);
             }
         }
-    })
+    })) {
+        entity.buckets = snapBuc;
+        return true; // use this to trigger entity location reset
+    } else {
+        this.setNewBuckets(entity, snapBuc);
+        return false; // use this to keep new location
+    }
+};
 
+Hash.prototype.setNewBuckets = function(entity, snapBuc) {
+    var that = this;
+    // first test to see if buckets need to change
+    if (snapBuc.length === entity.buckets.length &&
+        snapBuc.every(function(value, i) {
+            return value === entity.buckets[i]; })) {
+        // if new buckets === old buckets no need to change
+        return;
+    } else {
+        // delete entity from old buckets
+        snapBuc.forEach(function(buc) {
+            delete that.table[buc].bucket[entity.id];
+        });
+        // add entity to new buckets
+        entity.buckets.forEach(function(buc) {
+            that.table[buc].bucket[entity.id] = entity;
+        });
+    }
 };

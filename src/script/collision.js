@@ -61,17 +61,18 @@ Hash.prototype.testCollision = function(entity) {
 
     if (entity.buckets.some(function(buc) {
         for (var ele in that.table[buc].bucket) {
+            var against = that.table[buc].bucket[ele];
             // test if id already tested
             if (omitted.some(function(id) {
-                return id === ele.id;
+                return id === against.id;
             })) {
                 // if true skip this ele
                 return;
             } else {
                 // if not yet tested add to tested list
-                omitted.push(ele.id);
+                omitted.push(against.id);
                 // then test for collision
-                return collision(entity, ele);
+                return collision(entity, against);
             }
         }
     })) {

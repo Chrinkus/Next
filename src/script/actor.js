@@ -18,11 +18,12 @@ Actor.prototype.draw = function(ctx) {
 };
 
 Actor.prototype.getBuckets = function(cellSize, cols) {
-    var xOrigLoc = Math.floor(this.x / cellSize);
-    var yOrigLoc = Math.floor(this.y / cellSize);
+    // origins protected against possible negative values
+    var xOrigLoc = this.x < 0 ? 0 : Math.floor(this.x / cellSize);
+    var yOrigLoc = this.y < 0 ? 0 : Math.floor(this.y / cellSize);
     var xMaxLoc = Math.floor((this.x + this.width) / cellSize);
     var yMaxLoc = Math.floor((this.y + this.height) / cellSize);
-
+    
     // All possible buckets - may contain duplicates
     var buckets = [
         yOrigLoc * cols + xOrigLoc,    // top left corner

@@ -50,7 +50,7 @@ GAME.scenario.update = function(delta) {
     }
 };
 
-GAME.scenario.draw = function(ctx) {
+GAME.scenario.draw = function(ctx, delta) {
     "use strict";
     GAME.clear();
     GAME.fill("#999");

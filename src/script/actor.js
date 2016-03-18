@@ -76,7 +76,7 @@ NPC.prototype.wander = function(delta) {
         this.delay = 0;
     } else {
         Projectile.prototype.update.call(this, delta / 1000);
-        if (outside(this)) {
+        if (outside(this) || GAME.scenario.hash.testCollision(this)) {
             this.x = snapLoc.x;
             this.y = snapLoc.y;
         }
@@ -122,31 +122,26 @@ Player.prototype.update = function(deltaS) {
         this.x += deltaS * this.speed;
     }
     
-    /* Collision Detect
-    if (GAME.scenario.collisionEntities.some(collision, this)) {
-        this.x = snapLoc.x;
-        this.y = snapLoc.y;
-    }
-    */
     if (GAME.scenario.hash.testCollision(this)) {
         this.x = snapLoc.x;
         this.y = snapLoc.y;
     }
 
-    // Projectiles
+    /* Projectiles
     if (this.delay > 0.15 &&
             KEY.SPACE in keysDown &&
             this.projectiles.length < 3) {
 
         this.projectiles.unshift(new Projectile(
-                    "/src/images/Red_Projectile.png",
+                    "pj", "/src/images/Red_Projectile.png",
                     16, 16, this.x, this.y, this.facing));
         this.delay = 0;
     }
 
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
-            if (GAME.scenario.collisionEntities.some(collision, proj)) {
+            proj.getBuckets(GAME.scenario.hash.cellSize, GAME.scenario.hash.cols);
+            if (GAME.scenario.testCollision(proj)) {
                 proj.anima = proj.impact;
             } else {
                 proj.update(deltaS);
@@ -156,7 +151,7 @@ Player.prototype.update = function(deltaS) {
                 arr.splice(i, i + 1);
             }
         });
-    }
+    }*/
 }
 
 Player.prototype.draw = function(ctx) {
@@ -167,6 +162,7 @@ Player.prototype.draw = function(ctx) {
 
     ctx.restore();
 
+    /*
     if (this.projectiles.length) {
         this.projectiles.forEach(function(proj, i, arr) {
             // remove if termination finished
@@ -181,17 +177,19 @@ Player.prototype.draw = function(ctx) {
                 proj.anima.draw(ctx, proj.x, proj.y);
             }
         });
-    }
+    }*/
 }
 
-function Projectile(imgSrc, w, h, x, y, facing) {
+function Projectile(id, imgSrc, w, h, x, y, facing) {
     "use strict";
+    this.id = id;
     this.x = x + 24;               // half of player frame width (not really?)
     this.y = y + 32;               // half of player frame height
     this.width = w;
     this.height = h;
     this.facing = facing;
     this.speed = 512;
+    this.buckets = [];
 
     this.sheet = new SpriteSheet(imgSrc, this.width, this.height);
     this.fire = new Animation(this.sheet, 15, 0, 1);

@@ -1,7 +1,7 @@
 // Actor class => good for static images
-function Actor(id, imgSrc, w, h, x, y) {
+function Actor(ident, imgSrc, w, h, x, y) {
     "use strict";
-    this.id = id;
+    this.ident = ident;
     if (imgSrc) {
         this.img = new Image();
         this.img.src = imgSrc;
@@ -39,9 +39,9 @@ Actor.prototype.getBuckets = function(cellSize, cols) {
 };
 
 // StaticNPC class => non-moving NPCs
-function NPC(id, imgSrc, w, h, x, y, anchor, radius) {
+function NPC(ident, imgSrc, w, h, x, y, anchor, radius) {
     "use strict";
-    Actor.call(this, id, null, w, h, x, y);
+    Actor.call(this, ident, null, w, h, x, y);
     if (anchor) { this.anchor = anchor; }
     if (radius) { this.radius = radius; }
     this.delay = 0;
@@ -83,9 +83,9 @@ NPC.prototype.wander = function(delta) {
     }
 };
 
-function Player(id, imgSrc, w, h, x, y) {
+function Player(ident, imgSrc, w, h, x, y) {
     "use strict";
-    NPC.call(this, id, imgSrc, w, h, x, y);
+    NPC.call(this, ident, imgSrc, w, h, x, y);
     this.pause = false;
     this.facing = "left";           // Default facing
     this.projectiles = [];
@@ -180,9 +180,9 @@ Player.prototype.draw = function(ctx) {
     }*/
 }
 
-function Projectile(id, imgSrc, w, h, x, y, facing) {
+function Projectile(ident, imgSrc, w, h, x, y, facing) {
     "use strict";
-    this.id = id;
+    this.ident = ident;
     this.x = x + 24;               // half of player frame width (not really?)
     this.y = y + 32;               // half of player frame height
     this.width = w;

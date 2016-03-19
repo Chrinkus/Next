@@ -54,23 +54,23 @@ Hash.prototype.testCollision = function(entity) {
     // if collision occurs, don't forget to revert buckets to snapBuc
 
     var that = this;
-    // create omit list adding entity id
-    var omitted = [entity.id];
+    // create omit list adding entity ident
+    var omitted = [entity.ident];
     var snapBuc = entity.buckets.slice();
     entity.getBuckets(this.cellSize, this.cols);
 
     if (entity.buckets.some(function(buc) {
         for (var ele in that.table[buc].bucket) {
             var against = that.table[buc].bucket[ele];
-            // test if id already tested
-            if (omitted.some(function(id) {
-                return id === against.id;
+            // test if ident already tested
+            if (omitted.some(function(ident) {
+                return ident === against.ident;
             })) {
                 // if true skip this ele
                 return;
             } else {
                 // if not yet tested add to tested list
-                omitted.push(against.id);
+                omitted.push(against.ident);
                 // then test for collision
                 return collision(entity, against);
             }
@@ -95,11 +95,11 @@ Hash.prototype.setNewBuckets = function(entity, snapBuc) {
     } else {
         // delete entity from old buckets
         snapBuc.forEach(function(buc) {
-            delete that.table[buc].bucket[entity.id];
+            delete that.table[buc].bucket[entity.ident];
         });
         // add entity to new buckets
         entity.buckets.forEach(function(buc) {
-            that.table[buc].bucket[entity.id] = entity;
+            that.table[buc].bucket[entity.ident] = entity;
         });
     }
 };
@@ -112,11 +112,13 @@ Hash.prototype.testDraw = function(ctx) {
     this.table.forEach(function(buc) {
         for (var entity in buc.bucket) {
             ele = buc.bucket[entity];
-            if (!omitted.some(function(id) {
-                return id === ele.id;
+            if (omitted.some(function(ident) {
+                return ident === ele.ident;
             })) {
-                omitted.push(ele.id);
-                ctx.fillRect(ele.x, ele.y, ele.w, ele.h);
+                return;
+            } else {
+                omitted.push(ele.ident);
+                ctx.fillRect(ele.x, ele.y, ele.width, ele.height);
             }
         }
     });

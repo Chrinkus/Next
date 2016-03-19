@@ -46,6 +46,7 @@ var GAME = GAME || {};
 
         that.scenario.update(delta);
         that.scenario.draw(ctx, delta);
+        GAME.scenario.hash.testDraw(ctx);
 
         then = now;
     };

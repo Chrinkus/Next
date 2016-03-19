@@ -103,3 +103,21 @@ Hash.prototype.setNewBuckets = function(entity, snapBuc) {
         });
     }
 };
+
+Hash.prototype.testDraw = function(ctx) {
+    var omitted = [];
+    var ele = {};
+    ctx.fillStyle = "rgba(50, 0, 0, 0.5)";
+
+    this.table.forEach(function(buc) {
+        for (var entity in buc.bucket) {
+            ele = buc.bucket[entity];
+            if (!omitted.some(function(id) {
+                return id === ele.id;
+            })) {
+                omitted.push(ele.id);
+                ctx.fillRect(ele.x, ele.y, ele.w, ele.h);
+            }
+        }
+    });
+};

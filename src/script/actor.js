@@ -79,6 +79,8 @@ NPC.prototype.wander = function(delta) {
         if (outside(this) || GAME.scenario.hash.testCollision(this)) {
             this.x = snapLoc.x;
             this.y = snapLoc.y;
+            this.delay = 0;
+            this.facing = "";
         }
     }
 };

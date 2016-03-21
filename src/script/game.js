@@ -31,7 +31,7 @@ GAME.scenario.init = function() {
     this.crate = new Actor("a2", "/src/images/Crate.png", 64, 64, 800, 300);
     this.blueCube = new NPC("n1", "/src/images/Blue_Cube.png", 64, 64, 750, 150);
     this.yellowCube = new NPC("n2", "/src/images/Yellow_Cube.png", 64, 64,
-            512, 288, { x: 512, y: 288 }, 128);
+            512, 320, { x: 512, y: 320 }, 128);
 
     this.animators = ["player", "blueCube", "yellowCube"];
     this.staticImgs = ["barrel", "crate"];

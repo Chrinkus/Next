@@ -21,6 +21,15 @@ var GAME = GAME || {};
         ctx.fillRect(0, 0, CW, CH);
     }
 
+    this.fillHash = function() {
+        for (var y = 0; y < 5; y++) {
+            for (var x = 0; x < 8; x++) {
+                ctx.fillStyle = (x + y) % 2 ? "#FFF" : "#999";
+                ctx.fillRect(x * 128, y * 128, 128, 128);
+            }
+        }
+    }
+
     this.inputInit();
     this.menusInit();
 

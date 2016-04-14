@@ -55,7 +55,7 @@ GAME.scenario.update = function(delta) {
 GAME.scenario.draw = function(ctx, delta) {
     "use strict";
     GAME.clear();
-    GAME.fill("#999");
+    GAME.fillHash();
 
     this.staticImgs.forEach(function(element) {
         GAME.scenario[element].draw(ctx);

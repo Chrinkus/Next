@@ -50,11 +50,11 @@ function NPC(ident, imgSrc, w, h, x, y, anchor, radius) {
 
     // Animations
     this.sheet = new SpriteSheet(imgSrc, w, h);
-    this.idle = new Animation(this.sheet, 15, 0, 1, false);
-    this.down = new Animation(this.sheet, 15, 2, 3, false);
-    this.up = new Animation(this.sheet, 15, 4, 5, false);
-    this.left = new Animation(this.sheet, 15, 6, 7, false);
-    this.right = new Animation(this.sheet, 15, 6, 7, true);
+    this.idle = new Animation(this.sheet, 15, 0, 1, false, false);
+    this.down = new Animation(this.sheet, 15, 2, 3, false, false);
+    this.up = new Animation(this.sheet, 15, 2, 3, false, true);
+    this.left = new Animation(this.sheet, 15, 4, 5, false, false);
+    this.right = new Animation(this.sheet, 15, 4, 5, true, false);
     this.anima = this.idle;
 }
 

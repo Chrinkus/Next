@@ -13,13 +13,14 @@ function SpriteSheet(path, frameWidth, frameHeight) {
     this.image.src = path;
 }
 
-function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip) {
+function Animation(spritesheet, frameSpeed, startFrame, endFrame, flip, rot) {
     "use strict";
     this.sprSheet = spritesheet;
     this.halfW = spritesheet.frameWidth / 2;
     this.halfH = spritesheet.frameHeight / 2;
     this.frameSpeed = frameSpeed;
     this.flip = flip;
+    this.rotate = rot;
     this.animaSeq = []; // array holding the order of the animation
     this.curFrame = 0;       // the current frame to draw
     this.counter = 0;            // keep track of frame rate
@@ -48,9 +49,17 @@ Animation.prototype.draw = function(ctx, x, y) {
     var row = Math.floor(this.animaSeq[this.curFrame] / this.sprSheet.framesPerRow);
     var col = Math.floor(this.animaSeq[this.curFrame] % this.sprSheet.framesPerRow);
     var newX = this.flip ? -x - this.sprSheet.frameWidth : x;
+    var rotX, rotY;
 
     ctx.save();
     if (this.flip) { ctx.scale(-1, 1); }
+    if (this.rotate) {
+        rotX = newX + this.halfW;
+        rotY = y + this.halfH;
+        ctx.translate(rotX, rotY);
+        ctx.rotate(Math.PI);
+        ctx.translate(-rotX, -rotY);
+    }
     
     ctx.drawImage(
             this.sprSheet.image,                // image
